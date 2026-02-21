@@ -48,7 +48,8 @@ typedef enum {
     RX_MSG_GP_VALVE_CMD,
     RX_MSG_NOT_SUPPORTED,
     RX_MSG_NOT_SAE_J1939,
-    RX_MSG_UNKNOWN
+    RX_MSG_UNKNOWN,
+    RX_MSG_RESP_REQ_65266
 } ENUM_J1939_RX_MSG;
 
 /* This functions must be called all the time, or be placed inside an interrupt listener */

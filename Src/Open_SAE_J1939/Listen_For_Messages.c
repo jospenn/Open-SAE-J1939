@@ -9,7 +9,10 @@
 
 /* Layers */
 #include "../ISO_11783/ISO_11783-7_Application_Layer/Application_Layer.h"
+#include "../SAE_J1939\SAE_J1939DA\SAE_J1939DA.h"
 #include "../Hardware/Hardware.h"
+
+#include "esp_log.h"
 
 /* This function should be called all the time, or be placed inside an interrupt listener */
 ENUM_J1939_RX_MSG Open_SAE_J1939_Listen_For_Messages(J1939* j1939) {
@@ -116,7 +119,11 @@ ENUM_J1939_RX_MSG Open_SAE_J1939_Listen_For_Messages(J1939* j1939) {
 		}else if (id0 == 0x0 && id1 == 0x2 && (DA == j1939->information_this_ECU.this_ECU_address || DA == 0xFF)){
 			SAE_J1939_Read_Address_Delete(j1939, data);															/* Not a SAE J1939 standard */
 			rx_msg = RX_MSG_NOT_SAE_J1939;
+		}else if (id0 == 0x18 && PGN==65266){
+			SAE_J1939DA_Read_Response_Request_Fuel_Economy(j1939, SA, (SA & 0xF), data);						/* SA & 0xF = motor number. Total 16 valves from 0 to 15 */
+			rx_msg = RX_MSG_RESP_REQ_65266;
 		}else{
+			ESP_LOGE("CAN","id0=%u id1=%u PGN=%u DA=%u SA=%u", id0, id1, PGN, DA, SA);
 			rx_msg = RX_MSG_UNKNOWN;																			/* The message was not meant for this ECU */
 		}
 		/* Add more else if statement here */

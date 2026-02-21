@@ -6,6 +6,7 @@
  */
 
 #include "Open_SAE_J1939.h"
+#include "../SAE_J1939/SAE_J1939DA/SAE_J1939DA.h"
 
 /* Layers */
 #include "../Hardware/Hardware.h"
@@ -39,6 +40,8 @@ bool Open_SAE_J1939_Startup_ECU(J1939* j1939) {
 	memset(j1939->other_ECU_address, 0xFF, 0xFF);
 	j1939->number_of_cannot_claim_address = 0;
 	j1939->number_of_other_ECU = 0;
+
+	SAE_J1939DA_init_Request_Fuel_Economy(j1939);
 
 	/* This broadcast out this ECU NAME + address to all other ECU:s */
 	SAE_J1939_Response_Request_Address_Claimed(j1939);

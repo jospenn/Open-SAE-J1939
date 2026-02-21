@@ -34,6 +34,8 @@
 													 * If proprietary B PGNs are not used, set this to 0 to save memory */
 #endif
 
+#define MAX_PGN_65266_DEVICES	16U
+
 /* PGN: 0x00E800 - Storing the Acknowledgement from the reading process */
 struct Acknowledgement {
 	uint8_t control_byte;							/* This indicates the status of the requested information about PGN: */
@@ -239,6 +241,17 @@ struct Auxiliary_valve_measured_position {
 	uint8_t from_ecu_address;						/* From which ECU came this message */
 };
 
+/* PGN 65266*/
+struct Fuel_Economy {
+	uint16_t engine_fuel_rate;				        /* Amount of fuel consumed by engine per unit of time.NOTE - See SPN 1600 for alternate resolution */
+	uint16_t engine_instantaneous_fuel_economy;		/* Current fuel economy at current vehicle velocity. FB00h = Infinite (for example, during engine motoring) */		
+	uint16_t engine_average_fuel_economy;			/* Average of instantaneous fuel economy for that segment of vehicle operation of interest.*/
+	uint8_t engine_throttle_valve_1_Position_1;		/* The position of the valve used to regulate the supply of a fluid, usually air or fuel/air mixture, to an engine.  0% represents no supply and 100% is full supply. */
+	uint8_t engine_throttle_valve_2_Position;		/* The sensed position feedback of the valve, coming from a second electrical actuator for a second throttle plate, used to regulate the supply of a fluid, usually air or fuel//air mixture.  0% represents no supply and 100% is full supply. SPN 51 is used for the first throttle position feedback.*/
+	uint8_t from_ecu_address;						/* From which ECU came this message */
+	uint8_t updateCounter;
+};
+
 /* This struct is used for save information and load information from hard drive/SD-card/flash etc. due to the large size of J1939 */
 typedef struct {
 	struct Name this_name;
@@ -287,6 +300,8 @@ typedef struct {
 	struct Auxiliary_valve_estimated_flow this_auxiliary_valve_estimated_flow[16];
 	struct Auxiliary_valve_measured_position this_auxiliary_valve_measured_position[16];
 	struct General_purpose_valve_estimated_flow this_general_purpose_valve_estimated_flow;
+
+	struct Fuel_Economy from_other_ecu_fuel_economy[MAX_PGN_65266_DEVICES];
 
 } J1939;
 
