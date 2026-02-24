@@ -9,7 +9,7 @@
 #include "Hardware.h"
 
 /* This is a call back function e.g listener, that will be called once SAE J1939 data is going to be sent */
-static void (*Callback_Function_Send)(uint32_t, uint8_t, uint8_t[]) = NULL;
+static ENUM_J1939_STATUS_CODES (*Callback_Function_Send)(uint32_t, uint8_t, uint8_t[]) = NULL;
 static void (*Callback_Function_Read)(uint32_t*, uint8_t[], bool*) = NULL;
 static void (*Callback_Function_Traffic)(uint32_t, uint8_t, uint8_t[], bool) = NULL;
 static void (*Callback_Function_Delay_ms)(uint8_t) = NULL;
@@ -99,8 +99,7 @@ ENUM_J1939_STATUS_CODES CAN_Send_Message(uint32_t ID, uint8_t data[]) {
   status = socketcan_transmit(ID, data, 8);
 #elif OPENSAE_J1939_TARGET_PLATFORM == INTERNAL_CALLBACK
 	/* Call our callback function */
-	Callback_Function_Send(ID, 8, data);
-	status = STATUS_SEND_OK;
+	status = Callback_Function_Send(ID, 8, data);
 #else
 	/* If no processor are used, use internal feedback for debugging */
 	status = Internal_Transmit(ID, data, 8);
@@ -185,11 +184,11 @@ bool CAN_Read_Message(uint32_t* ID, uint8_t data[]) {
 	return is_new_message;
 }
 
-void CAN_Set_Callback_Functions(void (*Callback_Function_Send_)(uint32_t, uint8_t, uint8_t[]),
+void CAN_Set_Callback_Functions(ENUM_J1939_STATUS_CODES (*Callback_Function_Send_)(uint32_t, uint8_t, uint8_t[]),
 	void (*Callback_Function_Read_)(uint32_t*, uint8_t[], bool*),
 	void (*Callback_Function_Traffic_)(uint32_t, uint8_t, uint8_t[], bool),
-	void (*Callback_Function_Delay_ms_)(uint8_t)
-) {
+	void (*Callback_Function_Delay_ms_)(uint8_t))
+{
 	Callback_Function_Send = Callback_Function_Send_;
 	Callback_Function_Read = Callback_Function_Read_;
 	Callback_Function_Traffic = Callback_Function_Traffic_;
@@ -215,4 +214,25 @@ void CAN_Delay(uint8_t milliseconds) {
 #else
 	/* Nothing */
 #endif
+}
+
+
+static void (*Callback_Function_Log)(const char *format, va_list args) = NULL;
+
+void SAE_J1939_Set_Logger_Callback_Function(void (*Callback_Function_Log_)(const char *format, va_list args))
+{
+    Callback_Function_Log = Callback_Function_Log_;
+}
+
+void SAE_J1939_logger(const char *format, ...)
+{
+    if (Callback_Function_Log == NULL)
+        return;
+
+    va_list args;
+    va_start(args, format);
+
+    Callback_Function_Log(format, args);
+
+    va_end(args);
 }

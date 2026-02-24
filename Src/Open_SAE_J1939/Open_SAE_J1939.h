@@ -56,7 +56,9 @@ typedef enum {
 ENUM_J1939_RX_MSG Open_SAE_J1939_Listen_For_Messages(J1939 *j1939);
 
 /* This function should ONLY be called at your ECU startup */
-bool Open_SAE_J1939_Startup_ECU(J1939* j1939);
+bool Open_SAE_J1939_init_and_Load_ECU_info(J1939* j1939, uint32_t identityNumber);
+
+bool SAE_J1936_handle_address_claim(J1939 *j1939);
 
 /* This function should ONLY be called at your ECU closedown */
 bool Open_SAE_J1939_Closedown_ECU(J1939* j1939);

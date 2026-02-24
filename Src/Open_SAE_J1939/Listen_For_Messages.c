@@ -77,7 +77,7 @@ ENUM_J1939_RX_MSG Open_SAE_J1939_Listen_For_Messages(J1939* j1939) {
 				  ((PGN >= PGN_PROPRIETARY_B2_START) && (PGN <= PGN_PROPRIETARY_B2_END))) {
 			SAE_J1939_Read_Response_Request_Proprietary_B(j1939, SA, PGN, data);								/* Manufacturer specific data (B) */
 			rx_msg = RX_MSG_RESP_REQ_PROPRIETARY_B;
-		}else if (id0 == 0x18 && id1 == 0xEE && DA == 0xFF && SA != 0xFE){
+		}else if (PGN == 60928 && SA != 0xFE){
 			SAE_J1939_Read_Response_Request_Address_Claimed(j1939, SA, data);									/* This is a broadcast response request */
 			rx_msg = RX_MSG_RESP_REQ_ADDR_CLAIMED;
 		}else if (id0 == 0x18 && id1 == 0xEE && DA == 0xFF && SA == 0xFE) {

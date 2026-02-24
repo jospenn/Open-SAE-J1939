@@ -60,17 +60,15 @@ bool Load_Struct(uint8_t data[], uint32_t data_length, char file_name[]){
 	/* Implement your memory handler function for the AVR platform */
 #else
 	Information_this_ECU *thisEcu = (Information_this_ECU*)data;
-
-	thisEcu->this_ECU_address = OPENSAE_J1939_ECU_ADRESS;
-
+	thisEcu->this_ECU_address 						= ECU_START_ADDRESS;		/* On-Board Data Logger */
 	thisEcu->this_name.identity_number 				= 1111;		/* Specify the ECU serial ID - 0 to 2097151 */
 	thisEcu->this_name.manufacturer_code 			= 1111;		/* Specify the ECU manufacturer code - 0 to 2047 */
 	thisEcu->this_name.function_instance			= 0;		/* Specify the ECU function number - 0 to 31 */
 	thisEcu->this_name.ECU_instance					= 0;		/* Specify the ECU number - 0 to 7 */
-	thisEcu->this_name.function						= 0;		/* Specify the ECU function - 0 to 255 */
+	thisEcu->this_name.function						= 139;		/* Specify the ECU function - 0 to 255, 139	Data Logger */
 	thisEcu->this_name.vehicle_system				= 0;		/* Specify the type of vehicle where ECU is located - 0 to 127 */
 	thisEcu->this_name.arbitrary_address_capable	= 1;		/* Specify if the ECU have right to change address if addresses conflicts - 0 to 1 */
-	thisEcu->this_name.industry_group				= 0;		/* Specify the group where this ECU is located - 0 to 7 */
+	thisEcu->this_name.industry_group				= 4;		/* Specify the group where this ECU is located - 0 to 7, 4 marine*/
 	thisEcu->this_name.vehicle_system_instance		= 0;		/* Specify the vehicle system number - 0 to 15 */
 	thisEcu->this_name.from_ecu_address				= 0;		/* From which ECU came this message */
 

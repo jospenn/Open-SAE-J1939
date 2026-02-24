@@ -259,12 +259,26 @@ typedef struct {
 	struct Identifications this_identifications;
 } Information_this_ECU;
 
+typedef enum{
+	INIT,
+	INIT_FINISHED,
+	ADDRESS_CLAIM_START,
+	ADDRESS_CLAIM_PENDING,
+	ADDRESS_CLAIM_AGAIN,
+	ADDRESS_CLAIM_FINISHED,
+	ADDRESS_CLAIM_FAILED,
+	OPERATIONAL,
+
+}operation_status;
+
 /* This struct is used for handling J1939 information */
 typedef struct {
 	/* Latest CAN message */
 	uint32_t ID;									/* This is the CAN bus ID */
 	uint8_t data[8];								/* This is the CAN bus data */
 	bool ID_and_data_is_updated;					/* This is a flag that going to be set to true for every time ID and data updates - Very useful in higher applications such as C++ */
+	operation_status operational_status_of_this_ecu;
+	bool current_ECU_address_in_use_we_lost;
 
 	/* Store addresses of ECU */
 	uint8_t number_of_other_ECU;				 	/* How many other ECU are connected */
