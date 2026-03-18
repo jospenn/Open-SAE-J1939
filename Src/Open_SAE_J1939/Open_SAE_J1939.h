@@ -16,6 +16,7 @@
 #include "../SAE_J1939/SAE_J1939-73_Diagnostics_Layer/Diagnostics_Layer.h"
 #include "../SAE_J1939/SAE_J1939-81_Network_Management_Layer/Network_Management_Layer.h"
 #include "../SAE_J1939/SAE_J1939-21_Transport_Layer/Transport_Layer.h"
+#include "../SAE_J1939/SAE_J1939DA/SAE_J1939DA.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,7 +50,8 @@ typedef enum {
     RX_MSG_NOT_SUPPORTED,
     RX_MSG_NOT_SAE_J1939,
     RX_MSG_UNKNOWN,
-    RX_MSG_RESP_REQ_65266
+    RX_MSG_RESP_REQ_65266,
+    RX_MSG_RESP_REQ_64737
 } ENUM_J1939_RX_MSG;
 
 /* This functions must be called all the time, or be placed inside an interrupt listener */

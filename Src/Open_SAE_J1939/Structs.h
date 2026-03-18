@@ -35,6 +35,7 @@
 #endif
 
 #define MAX_PGN_65266_DEVICES	16U
+#define MAX_PGN_64737_DEVICES	16U
 
 /* PGN: 0x00E800 - Storing the Acknowledgement from the reading process */
 struct Acknowledgement {
@@ -241,13 +242,21 @@ struct Auxiliary_valve_measured_position {
 	uint8_t from_ecu_address;						/* From which ECU came this message */
 };
 
-/* PGN 65266*/
+/* PGN 65266 */
 struct Fuel_Economy {
 	uint16_t engine_fuel_rate;				        /* Amount of fuel consumed by engine per unit of time.NOTE - See SPN 1600 for alternate resolution */
 	uint16_t engine_instantaneous_fuel_economy;		/* Current fuel economy at current vehicle velocity. FB00h = Infinite (for example, during engine motoring) */		
 	uint16_t engine_average_fuel_economy;			/* Average of instantaneous fuel economy for that segment of vehicle operation of interest.*/
 	uint8_t engine_throttle_valve_1_Position_1;		/* The position of the valve used to regulate the supply of a fluid, usually air or fuel/air mixture, to an engine.  0% represents no supply and 100% is full supply. */
 	uint8_t engine_throttle_valve_2_Position;		/* The sensed position feedback of the valve, coming from a second electrical actuator for a second throttle plate, used to regulate the supply of a fluid, usually air or fuel//air mixture.  0% represents no supply and 100% is full supply. SPN 51 is used for the first throttle position feedback.*/
+	uint8_t from_ecu_address;						/* From which ECU came this message */
+	uint8_t updateCounter;
+};
+
+/* PGN 64737 */
+struct Fuel_Economy2 {
+	uint32_t engine_fuel_rate_high_resolution;		/* Amount of fuel consumed by engine per unit of time.  NOTE - See SPN 183 for alternate resolution. */
+	uint16_t engine_diesel_fuel_demand_rate;		/* Amount of diesel fuel that would be consumed by an engine per unit of time if it were not substituting gaseous fuel.  This parameter is the sum of SPN 183 and the amount of diesel fuel that is being displaced by gaseous fuel.  If the engine is not actually substituting gaseous fuel, then this parameter will be the same as SPN 183.*/
 	uint8_t from_ecu_address;						/* From which ECU came this message */
 	uint8_t updateCounter;
 };
@@ -315,8 +324,10 @@ typedef struct {
 	struct Auxiliary_valve_measured_position this_auxiliary_valve_measured_position[16];
 	struct General_purpose_valve_estimated_flow this_general_purpose_valve_estimated_flow;
 
+	uint8_t number_of_known_engines_fuel_economy;
 	struct Fuel_Economy from_other_ecu_fuel_economy[MAX_PGN_65266_DEVICES];
-
+	uint8_t number_of_known_engines_fuel_economy2;
+	struct Fuel_Economy2 from_other_ecu_fuel_economy2[MAX_PGN_64737_DEVICES];
 } J1939;
 
 /* Enum for SAE J1939 application information */

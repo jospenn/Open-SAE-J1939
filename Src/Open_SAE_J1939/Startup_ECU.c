@@ -51,6 +51,7 @@ bool Open_SAE_J1939_init_and_Load_ECU_info(J1939* j1939, uint32_t identityNumber
 	srand(identityNumber);
 
 	SAE_J1939DA_init_Request_Fuel_Economy(j1939);
+	SAE_J1939DA_init_Request_Fuel_Economy2(j1939);
 	
 	j1939->operational_status_of_this_ecu = INIT_FINISHED;
 	/* OK */
